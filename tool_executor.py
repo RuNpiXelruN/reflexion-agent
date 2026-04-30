@@ -9,8 +9,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from langchain_tavily import TavilySearch
-from langchain_core import StructuredTool
+try:
+    from langchain_tavily import TavilySearch
+except ImportError as e:
+    raise ImportError(
+        "langchain_tavily is not installed in this Python environment. "
+        "From the project folder run: poetry install — then use "
+        "`poetry run python main.py`, or select the `.venv` interpreter in your IDE "
+        "(see poetry.toml: in-project virtualenv)."
+    ) from e
+from langchain_core.tools import StructuredTool
 from langgraph.prebuilt import ToolNode
 from schemas import AnswerQuestion, ReviseAnswer
 
@@ -18,6 +26,7 @@ tavily_tool = TavilySearch(max_results=5)
 
 
 def run_queries(search_queries: list[str], **kwargs):
+    """Run web search for each query via Tavily and return combined results."""
     return tavily_tool.batch([{"query": query} for query in search_queries])
 
 execute_tools = ToolNode(

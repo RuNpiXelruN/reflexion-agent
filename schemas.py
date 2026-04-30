@@ -14,7 +14,7 @@ class AnswerQuestion(BaseModel):
         description="1-3 search queries to research information and improve the answer",
     )
 
-class ReviseQuestion(AnswerQuestion):
+class ReviseAnswer(AnswerQuestion):
     references: List[str] = Field(
         default_factory=list,
         description="Citations to the information used in the answer",
